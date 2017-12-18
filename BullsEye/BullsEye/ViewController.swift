@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var currentValue: Int = 50
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -21,14 +23,20 @@ class ViewController: UIViewController {
     }
 
     @IBAction func showAlert() {
+        let message = "The value of the slider is: \(currentValue)"
         let alertVC = UIAlertController(title: "Hello World!",
-                                        message: "This is my first app!",
+                                        message: message,
                                         preferredStyle: .alert)
-        let action = UIAlertAction(title: "Awesome",
+        let action = UIAlertAction(title: "OK",
                                    style: .default,
                                    handler: nil)
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
+    }
+
+    @IBAction func sliderMoved(_ sender: UISlider) {
+        // lroundf rounds decimals to the nearest whole number
+        currentValue = lroundf(sender.value)
     }
 }
 
