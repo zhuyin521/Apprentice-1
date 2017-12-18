@@ -10,11 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var currentValue: Int = 50
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var targetLabel: UILabel!
+    var currentValue: Int = 0
+    var targetValue: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        startNewRound()
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,7 +26,8 @@ class ViewController: UIViewController {
     }
 
     @IBAction func showAlert() {
-        let message = "The value of the slider is: \(currentValue)"
+        let message = "The value of the slider is: \(currentValue)" +
+                      "\nThe target value is: \(targetValue)"
         let alertVC = UIAlertController(title: "Hello World!",
                                         message: message,
                                         preferredStyle: .alert)
@@ -32,11 +36,26 @@ class ViewController: UIViewController {
                                    handler: nil)
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
+        startNewRound()
     }
 
     @IBAction func sliderMoved(_ sender: UISlider) {
         // lroundf rounds decimals to the nearest whole number
         currentValue = lroundf(sender.value)
+    }
+
+    private func startNewRound() {
+        // arc4random_uniform(100) returns a UInt32 from 0..99
+        // target value will get a random number from 1..100
+        targetValue = 1 + Int(arc4random_uniform(100))
+        currentValue = 50
+        slider.value = Float(currentValue)
+        updateLabels()
+    }
+
+    // updateLabels() is called at the end of startNewRound()
+    private func updateLabels() {
+        targetLabel.text = String(targetValue)
     }
 }
 
