@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class ViewController: UIViewController {
 
@@ -82,6 +83,7 @@ class ViewController: UIViewController {
         score = 0
         round = 0
         startNewRound()
+        crossfade()
     }
 
     // updateLabels() is called at the end of startNewRound()
@@ -104,6 +106,15 @@ class ViewController: UIViewController {
         let trackRightImage = #imageLiteral(resourceName: "SliderTrackRight")
         let trackRightResizable = trackRightImage.resizableImage(withCapInsets: insets)
         slider.setMaximumTrackImage(trackRightResizable, for: .normal)
+    }
+
+    // crossfade() is run at the end of startOver()
+    private func crossfade() {
+        let transition = CATransition()
+        transition.type = kCATransitionFade
+        transition.duration = 0.7
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        view.layer.add(transition, forKey: nil)
     }
 }
 
