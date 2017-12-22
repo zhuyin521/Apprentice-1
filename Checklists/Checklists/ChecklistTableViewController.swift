@@ -31,6 +31,13 @@ class ChecklistTableViewController: UITableViewController {
         configureCheckmark(for: cell, with: item)
         return cell
     }
+    // When this method is present, table view will automatically enable swipe-to-delete
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        // Remove item from array
+        checklistItems.remove(at: indexPath.row)
+        // Remove item from table view
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
 
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
