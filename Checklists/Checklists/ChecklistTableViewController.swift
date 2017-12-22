@@ -11,7 +11,9 @@ import UIKit
 class ChecklistTableViewController: UITableViewController, AddItemViewControllerDelegate {
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
-    private let labelTagID = 1000
+    private let LabelTagID = 1000
+    private let CheckmarkTagID = 1001
+    private let checkmark = "✅"
     private var checklistItems = [ChecklistItem]()
     // MARK: - View controller methods
     required init?(coder aDecoder: NSCoder) {
@@ -74,10 +76,11 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         }
     }
     private func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
-        let label = cell.viewWithTag(labelTagID) as! UILabel
+        let label = cell.viewWithTag(LabelTagID) as! UILabel
         label.text = item.text
     }
     private func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
-        cell.accessoryType = (item.checked) ? .checkmark : .none
+        let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
+        checkmarkLabel.text = (item.checked) ? checkmark : ""
     }
 }

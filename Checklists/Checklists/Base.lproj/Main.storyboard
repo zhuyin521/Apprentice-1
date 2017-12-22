@@ -18,21 +18,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="ChecklistItem" id="mHy-gb-Agr">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="ChecklistItem" id="mHy-gb-Agr">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mHy-gb-Agr" id="hm3-ze-1Jy">
-                                    <rect key="frame" x="0.0" y="0.0" width="335" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="307" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="1000" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCs-JB-Bhu">
-                                            <rect key="frame" x="16" y="12" width="311" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1000" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCs-JB-Bhu">
+                                            <rect key="frame" x="44" y="0.0" width="263" height="44"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gki-7p-mhX">
+                                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="DTZ-cM-aS9"/>
+                                                <constraint firstAttribute="width" constant="44" id="NOQ-V1-QeP"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="mCs-JB-Bhu" secondAttribute="bottom" id="9Ag-CO-AS9"/>
+                                        <constraint firstItem="gki-7p-mhX" firstAttribute="leading" secondItem="hm3-ze-1Jy" secondAttribute="leading" id="BOf-Le-Qxf"/>
+                                        <constraint firstItem="gki-7p-mhX" firstAttribute="top" secondItem="hm3-ze-1Jy" secondAttribute="top" id="Bh5-5C-8Az"/>
+                                        <constraint firstItem="mCs-JB-Bhu" firstAttribute="top" secondItem="hm3-ze-1Jy" secondAttribute="top" id="iSz-hL-rlw"/>
+                                        <constraint firstAttribute="trailing" secondItem="mCs-JB-Bhu" secondAttribute="trailing" id="ngO-yv-Ryz"/>
+                                        <constraint firstAttribute="bottom" secondItem="gki-7p-mhX" secondAttribute="bottom" id="p4g-bY-giK"/>
+                                        <constraint firstItem="mCs-JB-Bhu" firstAttribute="leading" secondItem="gki-7p-mhX" secondAttribute="trailing" id="s6W-H2-SaV"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
