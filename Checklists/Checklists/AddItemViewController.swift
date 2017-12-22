@@ -13,6 +13,14 @@ class AddItemViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    // MARK: - Table view delegate methods
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        // Return nil from this method when you do not want the cell
+        //  to be selectable.
+        // WARNING: Change selection type in storyboard to None
+        // Sometimes the cell will still be selected for a brief second
+        return nil
+    }
     // MARK: - Action methods
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         navigationController?.popViewController(animated: true)
