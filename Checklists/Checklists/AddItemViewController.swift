@@ -8,10 +8,20 @@
 
 import UIKit
 
-class AddItemViewController: UITableViewController {
+class AddItemViewController: UITableViewController, UITextFieldDelegate {
+    // MARK: - Properties
+    // MARK: - IBOutlet properties
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Make keyboard available as soon as view controller
+        //  becomes active
+        textField.becomeFirstResponder()
     }
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -21,11 +31,28 @@ class AddItemViewController: UITableViewController {
         // Sometimes the cell will still be selected for a brief second
         return nil
     }
+    // MARK: - Text field delegate methods
+    // textField(_:shouldChangeCharactersIn:replacementString:) -> Bool tells you which part of the text
+    //  (the range) should be replaced, and the text it should be replaced with (the string)
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Calculate what the new text will be:
+        // 1. Get the old (exisiting text)
+        let oldText = textField.text!
+        // 2. Get the range in the existing text
+        let stringRange = Range(range, in: oldText)!
+        // 3. Create new text by replacing characters in range with the new string
+        let newText = oldText.replacingCharacters(in: stringRange, with: string)
+        // Set done button to enabled only if the new text is not empty
+        doneButton.isEnabled = !newText.isEmpty
+        // Return true to indicate that text field should proceed with replacement
+        return true
+    }
     // MARK: - Action methods
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         navigationController?.popViewController(animated: true)
     }
-    @IBAction func done(_ sender: UIBarButtonItem) {
+    @IBAction func done() {
+        print("Contents of the text field: \(textField.text!)")
         navigationController?.popViewController(animated: true)
     }
 }
