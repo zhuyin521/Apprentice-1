@@ -8,8 +8,16 @@
 
 import UIKit
 
+protocol AddItemViewControllerDelegate: class {
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
+    func addItemViewController(_ controller: AddItemViewController, addedItem item: ChecklistItem)
+}
+
 class AddItemViewController: UITableViewController, UITextFieldDelegate {
-    // MARK: - Properties
+    // MARK: - Class properties
+    static let SegueID = "AddItem"
+    // MARK: - Instance properties
+    weak var delegate: AddItemViewControllerDelegate?
     // MARK: - IBOutlet properties
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneButton: UIBarButtonItem!
@@ -32,11 +40,11 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate {
         return nil
     }
     // MARK: - Text field delegate methods
-    // textField(_:shouldChangeCharactersIn:replacementString:) -> Bool tells you which part of the text
+    // textField(_:shouldChangeCharactersIn:replacementString:) tells you which part of the text
     //  (the range) should be replaced, and the text it should be replaced with (the string)
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // Calculate what the new text will be:
-        // 1. Get the old (exisiting text)
+        // 1. Get the old/exisiting text
         let oldText = textField.text!
         // 2. Get the range in the existing text
         let stringRange = Range(range, in: oldText)!
@@ -44,15 +52,15 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate {
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
         // Set done button to enabled only if the new text is not empty
         doneButton.isEnabled = !newText.isEmpty
-        // Return true to indicate that text field should proceed with replacement
+        // Return true to indicate that text field should proceed with text replacement
         return true
     }
     // MARK: - Action methods
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        navigationController?.popViewController(animated: true)
+        delegate?.addItemViewControllerDidCancel(self)
     }
     @IBAction func done() {
-        print("Contents of the text field: \(textField.text!)")
-        navigationController?.popViewController(animated: true)
+        let item = ChecklistItem(text: textField.text!, checked: false)
+        delegate?.addItemViewController(self, addedItem: item)
     }
 }

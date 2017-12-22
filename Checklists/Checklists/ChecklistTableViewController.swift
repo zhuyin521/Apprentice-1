@@ -8,18 +8,22 @@
 
 import UIKit
 
-class ChecklistTableViewController: UITableViewController {
+class ChecklistTableViewController: UITableViewController, AddItemViewControllerDelegate {
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
     private let labelTagID = 1000
     private var checklistItems = [ChecklistItem]()
-
     // MARK: - View controller methods
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         addChecklistItems()
     }
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == AddItemViewController.SegueID {
+            let addItemVC = segue.destination as! AddItemViewController
+            addItemVC.delegate = self
+        }
+    }
     // MARK: - Table view data source methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checklistItems.count
@@ -38,7 +42,6 @@ class ChecklistTableViewController: UITableViewController {
         // Remove item from table view
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
-
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
@@ -48,19 +51,20 @@ class ChecklistTableViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
-    // MARK: - Action methods
-    @IBAction func addItem(_ sender: UIBarButtonItem) {
+    // MARK: - Add item view controller delegate methods
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        navigationController?.popViewController(animated: true)
+    }
+    func addItemViewController(_ controller: AddItemViewController, addedItem item: ChecklistItem) {
         // Grab new items index
         let newIndex = checklistItems.count
-        // Create item and add to array
-        let item = ChecklistItem(text: "A New Item", checked: true)
+        // Add item to array
         checklistItems.append(item)
         // Update table view
         let indexPath = IndexPath(row: newIndex, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
+        navigationController?.popViewController(animated: true)
     }
-
     // MARK: - Private methods
     private func addChecklistItems() {
         ["Walk the dog", "Brush my teeth", "Learn iOS Development",
