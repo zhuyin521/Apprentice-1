@@ -42,10 +42,24 @@ class ChecklistTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
+    // MARK: - Action methods
+    @IBAction func addItem(_ sender: UIBarButtonItem) {
+        // Grab new items index
+        let newIndex = checklistItems.count
+        // Create item and add to array
+        let item = ChecklistItem(text: "A New Item", checked: true)
+        checklistItems.append(item)
+        // Update table view
+        let indexPath = IndexPath(row: newIndex, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+    }
+
     // MARK: - Private methods
     private func addChecklistItems() {
-        (1...100).forEach { i in
-            checklistItems.append(ChecklistItem(text: "Item \(i)", checked: false))
+        ["Walk the dog", "Brush my teeth", "Learn iOS Development",
+         "Soccer practice", "Eat ice cream"].enumerated().forEach { (i, s) in
+            let checked = (i == 1 || i == 2 || i == 4)
+            checklistItems.append(ChecklistItem(text: s, checked: checked))
         }
     }
     private func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
