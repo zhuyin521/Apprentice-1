@@ -28,11 +28,9 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         return documentsDirectory.appendingPathComponent("Checklists.plist")
     }
     // MARK: - View controller methods
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        addChecklistItems()
-        print("Documents directory: \(documentsDirectory)")
-        print("Data file path: \(dataFilePath)")
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadChecklist()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = CheckListViewControllerSeugue(rawValue: id) {
@@ -126,6 +124,16 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
             try data.write(to: dataFilePath, options: .atomic)
         } catch {
             print("Error encoding checklist items")
+        }
+    }
+    private func loadChecklist() {
+        let decoder = PropertyListDecoder()
+        do {
+            let data = try Data(contentsOf: dataFilePath)
+            checklistItems = try decoder.decode([ChecklistItem].self,
+                                                from: data)
+        } catch {
+            print("Error loading checklist")
         }
     }
 }
