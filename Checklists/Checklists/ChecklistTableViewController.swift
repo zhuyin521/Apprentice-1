@@ -9,11 +9,10 @@
 import UIKit
 
 enum CheckListViewControllerSeugue: String {
-    case addItem  = "AddItem"
-    case editItem = "EditItem"
+    case AddItem, EditItem
 }
 
-class ChecklistTableViewController: UITableViewController, AddItemViewControllerDelegate {
+class ChecklistTableViewController: UITableViewController, ItemDetailViewControllerDelegate {
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
     private let LabelTagID = 1000
@@ -28,11 +27,11 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = CheckListViewControllerSeugue(rawValue: id) {
             switch segueID {
-            case .addItem:
-                let dest = segue.destination as! AddItemViewController
+            case .AddItem:
+                let dest = segue.destination as! ItemDetailViewController
                 dest.delegate = self
-            case .editItem:
-                let dest = segue.destination as! AddItemViewController
+            case .EditItem:
+                let dest = segue.destination as! ItemDetailViewController
                 dest.delegate = self
                 let cell = sender as! UITableViewCell
                 if let index = tableView.indexPath(for: cell) {
@@ -69,10 +68,10 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         tableView.deselectRow(at: indexPath, animated: true)
     }
     // MARK: - Add item view controller delegate methods
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         navigationController?.popViewController(animated: true)
     }
-    func addItemViewController(_ controller: AddItemViewController, addedItem item: ChecklistItem) {
+    func itemDetailViewController(_ controller: ItemDetailViewController, addedItem item: ChecklistItem) {
         // Grab new items index
         let newIndex = checklistItems.count
         // Add item to array
@@ -82,7 +81,7 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         tableView.insertRows(at: [indexPath], with: .automatic)
         navigationController?.popViewController(animated: true)
     }
-    func addItemViewController(_ controller: AddItemViewController, didFinishEditingItem item: ChecklistItem) {
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem) {
         // ChecklistItem must conform to Equatable protocol to use index(of:)
         if let index = checklistItems.index(of: item) {
             let indexPath = IndexPath(row: index, section: 0)

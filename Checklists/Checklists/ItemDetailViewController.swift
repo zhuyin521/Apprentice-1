@@ -8,15 +8,15 @@
 
 import UIKit
 
-protocol AddItemViewControllerDelegate: class {
-    func addItemViewControllerDidCancel(_ controller: ItemDetailViewController)
-    func addItemViewController(_ controller: ItemDetailViewController, addedItem item: ChecklistItem)
-    func addItemViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem)
+protocol ItemDetailViewControllerDelegate: class {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func itemDetailViewController(_ controller: ItemDetailViewController, addedItem item: ChecklistItem)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem)
 }
 
 class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - Instance properties
-    weak var delegate: AddItemViewControllerDelegate?
+    weak var delegate: ItemDetailViewControllerDelegate?
     var itemToEdit: ChecklistItem?
     // MARK: - IBOutlet properties
     @IBOutlet weak var textField: UITextField!
@@ -63,15 +63,15 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     }
     // MARK: - Action methods
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        delegate?.addItemViewControllerDidCancel(self)
+        delegate?.itemDetailViewControllerDidCancel(self)
     }
     @IBAction func done() {
         if let itemToEdit = itemToEdit {
             itemToEdit.text = textField.text!
-            delegate?.addItemViewController(self, didFinishEditingItem: itemToEdit)
+            delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit)
         } else {
             let item = ChecklistItem(text: textField.text!, checked: false)
-            delegate?.addItemViewController(self, addedItem: item)
+            delegate?.itemDetailViewController(self, addedItem: item)
         }
     }
 }
