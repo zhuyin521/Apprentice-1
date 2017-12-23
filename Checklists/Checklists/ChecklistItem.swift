@@ -8,7 +8,9 @@
 
 import Foundation
 
-class ChecklistItem {
+// Subclassing NSObject automatically conforms ChecklistItem
+//  to equatable protocol
+class ChecklistItem: NSObject {
     var text: String
     var checked: Bool
 

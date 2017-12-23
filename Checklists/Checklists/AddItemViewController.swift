@@ -11,19 +11,25 @@ import UIKit
 protocol AddItemViewControllerDelegate: class {
     func addItemViewControllerDidCancel(_ controller: AddItemViewController)
     func addItemViewController(_ controller: AddItemViewController, addedItem item: ChecklistItem)
+    func addItemViewController(_ controller: AddItemViewController, didFinishEditingItem item: ChecklistItem)
 }
 
 class AddItemViewController: UITableViewController, UITextFieldDelegate {
-    // MARK: - Class properties
-    static let SegueID = "AddItem"
     // MARK: - Instance properties
     weak var delegate: AddItemViewControllerDelegate?
+    var itemToEdit: ChecklistItem?
     // MARK: - IBOutlet properties
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneButton: UIBarButtonItem!
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Check if itemToEdit is non-nil, if so, create edit screen
+        if let itemToEdit = itemToEdit {
+            title = "Edit Item"
+            textField.text = itemToEdit.text
+            doneButton.isEnabled = true
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -60,7 +66,12 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate {
         delegate?.addItemViewControllerDidCancel(self)
     }
     @IBAction func done() {
-        let item = ChecklistItem(text: textField.text!, checked: false)
-        delegate?.addItemViewController(self, addedItem: item)
+        if let itemToEdit = itemToEdit {
+            itemToEdit.text = textField.text!
+            delegate?.addItemViewController(self, didFinishEditingItem: itemToEdit)
+        } else {
+            let item = ChecklistItem(text: textField.text!, checked: false)
+            delegate?.addItemViewController(self, addedItem: item)
+        }
     }
 }

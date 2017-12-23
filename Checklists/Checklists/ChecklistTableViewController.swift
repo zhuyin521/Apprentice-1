@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum CheckListViewControllerSeugue: String {
+    case addItem  = "AddItem"
+    case editItem = "EditItem"
+}
+
 class ChecklistTableViewController: UITableViewController, AddItemViewControllerDelegate {
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
@@ -21,9 +26,20 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         addChecklistItems()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == AddItemViewController.SegueID {
-            let addItemVC = segue.destination as! AddItemViewController
-            addItemVC.delegate = self
+        if let id = segue.identifier, let segueID = CheckListViewControllerSeugue(rawValue: id) {
+            switch segueID {
+            case .addItem:
+                let dest = segue.destination as! AddItemViewController
+                dest.delegate = self
+            case .editItem:
+                let dest = segue.destination as! AddItemViewController
+                dest.delegate = self
+                let cell = sender as! UITableViewCell
+                if let index = tableView.indexPath(for: cell) {
+                    let item = checklistItems[index.row]
+                    dest.itemToEdit = item
+                }
+            }
         }
     }
     // MARK: - Table view data source methods
@@ -33,8 +49,7 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let item = checklistItems[indexPath.row]
-        configureText(for: cell, with: item)
-        configureCheckmark(for: cell, with: item)
+        configureCell(cell, with: item)
         return cell
     }
     // When this method is present, table view will automatically enable swipe-to-delete
@@ -49,7 +64,7 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         if let cell = tableView.cellForRow(at: indexPath) {
             let item = checklistItems[indexPath.row]
             item.toggleChecked()
-            configureCheckmark(for: cell, with: item)
+            configureCell(cell, with: item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -67,6 +82,16 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
         tableView.insertRows(at: [indexPath], with: .automatic)
         navigationController?.popViewController(animated: true)
     }
+    func addItemViewController(_ controller: AddItemViewController, didFinishEditingItem item: ChecklistItem) {
+        // ChecklistItem must conform to Equatable protocol to use index(of:)
+        if let index = checklistItems.index(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureCell(cell, with: item)
+            }
+        }
+        navigationController?.popViewController(animated: true)
+    }
     // MARK: - Private methods
     private func addChecklistItems() {
         ["Walk the dog", "Brush my teeth", "Learn iOS Development",
@@ -75,12 +100,10 @@ class ChecklistTableViewController: UITableViewController, AddItemViewController
             checklistItems.append(ChecklistItem(text: s, checked: checked))
         }
     }
-    private func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
+    private func configureCell(_ cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(LabelTagID) as! UILabel
-        label.text = item.text
-    }
-    private func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
         let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
+        label.text = item.text
         checkmarkLabel.text = (item.checked) ? checkmark : ""
     }
 }
