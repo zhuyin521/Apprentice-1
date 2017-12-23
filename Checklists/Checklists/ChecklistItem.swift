@@ -10,7 +10,10 @@ import Foundation
 
 // Subclassing NSObject automatically conforms ChecklistItem
 //  to equatable protocol
-class ChecklistItem: NSObject {
+// Conforming to Codable allows ChecklistItem to be serializable
+// NOTE: Because the properties are basic Swift types, there is
+//  no need to provide implementations for Codeable protocol
+class ChecklistItem: NSObject, Codable {
     var text: String
     var checked: Bool
 

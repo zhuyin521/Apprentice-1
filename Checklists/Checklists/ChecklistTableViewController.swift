@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum CheckListViewControllerSeugue: String {
+private enum CheckListViewControllerSeugue: String {
     case AddItem, EditItem
 }
 
@@ -19,10 +19,20 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
     private let CheckmarkTagID = 1001
     private let checkmark = "✅"
     private var checklistItems = [ChecklistItem]()
+    private var documentsDirectory: URL {
+        let paths = FileManager.default.urls(for: .documentDirectory,
+                                             in: .userDomainMask)
+        return paths[0]
+    }
+    private var dataFilePath: URL {
+        return documentsDirectory.appendingPathComponent("Checklists.plist")
+    }
     // MARK: - View controller methods
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         addChecklistItems()
+        print("Documents directory: \(documentsDirectory)")
+        print("Data file path: \(dataFilePath)")
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = CheckListViewControllerSeugue(rawValue: id) {
@@ -57,6 +67,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         checklistItems.remove(at: indexPath.row)
         // Remove item from table view
         tableView.deleteRows(at: [indexPath], with: .automatic)
+        saveChecklist()
     }
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -66,8 +77,9 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
             configureCell(cell, with: item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
+        saveChecklist()
     }
-    // MARK: - Add item view controller delegate methods
+    // MARK: - Item detail view controller delegate methods
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         navigationController?.popViewController(animated: true)
     }
@@ -80,6 +92,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         let indexPath = IndexPath(row: newIndex, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
         navigationController?.popViewController(animated: true)
+        saveChecklist()
     }
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem) {
         // ChecklistItem must conform to Equatable protocol to use index(of:)
@@ -90,6 +103,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
             }
         }
         navigationController?.popViewController(animated: true)
+        saveChecklist()
     }
     // MARK: - Private methods
     private func addChecklistItems() {
@@ -104,5 +118,14 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
         label.text = item.text
         checkmarkLabel.text = (item.checked) ? checkmark : ""
+    }
+    private func saveChecklist() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(checklistItems)
+            try data.write(to: dataFilePath, options: .atomic)
+        } catch {
+            print("Error encoding checklist items")
+        }
     }
 }
