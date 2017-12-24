@@ -14,15 +14,16 @@ import Foundation
 // NOTE: Because the properties are basic Swift types, there is
 //  no need to provide implementations for Codeable protocol
 class ChecklistItem: NSObject, Codable {
+    // MARK: - Properties
     var text: String
     var checked: Bool
-
+    // MARK: - Initializers
     init(text: String, checked: Bool) {
         self.text = text
         self.checked = checked
         super.init()
     }
-
+    // MARK: - Methods
     func toggleChecked() {
         checked = !checked
     }

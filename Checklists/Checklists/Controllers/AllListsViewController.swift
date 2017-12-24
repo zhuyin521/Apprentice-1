@@ -35,7 +35,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             let item = ChecklistItem(text: text, checked: false)
             list.addItem(item)
         }
-        print("Documents directory: \(documentsDirectory)")
+        loadChecklists()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = AllListsViewControllerSegue(rawValue: id) {
@@ -99,6 +99,25 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         }
         navigationController?.popViewController(animated: true)
     }
+    // MARK: - Methods
+    func saveChecklists() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(lists)
+            try data.write(to: dataFilePath, options: .atomic)
+        } catch {
+            print("Error encoding checklist items")
+        }
+    }
+    func loadChecklists() {
+        let decoder = PropertyListDecoder()
+        do {
+            let data = try Data(contentsOf: dataFilePath)
+            lists = try decoder.decode([Checklist].self, from: data)
+        } catch {
+            print("Error loading checklist")
+        }
+    }
     // MARK: - Private methods
     private func makeCell(for tableView: UITableView) -> UITableViewCell {
         // Here you use dequeueReusableCell(withIdentifier:) instead of dequeueReusableCell(withIdentifier:for:)
@@ -108,24 +127,6 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             return cell
         } else {
             return UITableViewCell(style: .default, reuseIdentifier: CellID)
-        }
-    }
-    private func saveChecklists() {
-        let encoder = PropertyListEncoder()
-        do {
-            let data = try encoder.encode(lists)
-            try data.write(to: dataFilePath, options: .atomic)
-        } catch {
-            print("Error encoding checklist items")
-        }
-    }
-    private func loadChecklists() {
-        let decoder = PropertyListDecoder()
-        do {
-            let data = try Data(contentsOf: dataFilePath)
-            lists = try decoder.decode([Checklist].self, from: data)
-        } catch {
-            print("Error loading checklist")
         }
     }
 }
