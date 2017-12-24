@@ -15,13 +15,23 @@ private enum AllListsViewControllerSegue: String {
 class AllListsViewController: UITableViewController {
     // MARK: - Private properties
     private let CellID = "Cell"
+    private var lists = [Checklist]()
+    // MARK: - View controller methods
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        ["Birthdays", "Groceries", "Cool Apps", "To Do"].forEach {
+            lists.append(Checklist(name: $0))
+        }
+    }
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return lists.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = makeCell(for: tableView)
-        cell.textLabel?.text = "Label \(indexPath.row)"
+        let list = lists[indexPath.row]
+        cell.textLabel?.text = list.name
+        cell.accessoryType = .detailDisclosureButton
         return cell
     }
     // MARK: - Table view delegate
@@ -30,6 +40,9 @@ class AllListsViewController: UITableViewController {
     }
     // MARK: - Private methods
     private func makeCell(for tableView: UITableView) -> UITableViewCell {
+        // Here you use dequeueReusableCell(withIdentifier:) instead of dequeueReusableCell(withIdentifier:for:)
+        //  because the second one only works if there is a prototype cell. The app would crash
+        //  if you used the "for" version
         if let cell = tableView.dequeueReusableCell(withIdentifier: CellID) {
             return cell
         } else {
