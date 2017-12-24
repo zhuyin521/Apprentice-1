@@ -29,7 +29,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             case .ShowChecklist:
                 let destination = segue.destination as! ChecklistTableViewController
                 let list = sender as! Checklist
-                destination.list = list
+                destination.checklist = list
             case .AddChecklist:
                 let destination = segue.destination as! ListDetailViewController
                 destination.delegate = self

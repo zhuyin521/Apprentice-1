@@ -14,26 +14,16 @@ private enum CheckListViewControllerSegue: String {
 
 class ChecklistTableViewController: UITableViewController, ItemDetailViewControllerDelegate {
     // MARK: - Properties
-    var list: Checklist!
+    var checklist: Checklist!
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
     private let LabelTagID = 1000
     private let CheckmarkTagID = 1001
     private let checkmark = "✅"
-    private var checklistItems = [ChecklistItem]()
-    private var documentsDirectory: URL {
-        let paths = FileManager.default.urls(for: .documentDirectory,
-                                             in: .userDomainMask)
-        return paths[0]
-    }
-    private var dataFilePath: URL {
-        return documentsDirectory.appendingPathComponent("Checklists.plist")
-    }
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = list.name
-        loadChecklist()
+        title = checklist.name
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = CheckListViewControllerSegue(rawValue: id) {
@@ -46,7 +36,7 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
                 dest.delegate = self
                 let cell = sender as! UITableViewCell
                 if let index = tableView.indexPath(for: cell) {
-                    let item = checklistItems[index.row]
+                    let item = checklist[index.row]
                     dest.itemToEdit = item
                 }
             }
@@ -54,31 +44,29 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
     }
     // MARK: - Table view data source methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return checklistItems.count
+        return checklist.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let item = checklistItems[indexPath.row]
+        let item = checklist[indexPath.row]
         configureCell(cell, with: item)
         return cell
     }
     // When this method is present, table view will automatically enable swipe-to-delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        // Remove item from array
-        checklistItems.remove(at: indexPath.row)
+        // Remove item from checklist
+        checklist.removeItem(at: indexPath.row)
         // Remove item from table view
         tableView.deleteRows(at: [indexPath], with: .automatic)
-        saveChecklist()
     }
     // MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
-            let item = checklistItems[indexPath.row]
+            let item = checklist[indexPath.row]
             item.toggleChecked()
             configureCell(cell, with: item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        saveChecklist()
     }
     // MARK: - Item detail view controller delegate methods
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
@@ -86,57 +74,29 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
     }
     func itemDetailViewController(_ controller: ItemDetailViewController, addedItem item: ChecklistItem) {
         // Grab new items index
-        let newIndex = checklistItems.count
-        // Add item to array
-        checklistItems.append(item)
+        let newIndex = checklist.count
+        // Add item to checklist
+        checklist.addItem(item)
         // Update table view
         let indexPath = IndexPath(row: newIndex, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
         navigationController?.popViewController(animated: true)
-        saveChecklist()
     }
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem) {
         // ChecklistItem must conform to Equatable protocol to use index(of:)
-        if let index = checklistItems.index(of: item) {
+        if let index = checklist.index(of: item) {
             let indexPath = IndexPath(row: index, section: 0)
             if let cell = tableView.cellForRow(at: indexPath) {
                 configureCell(cell, with: item)
             }
         }
         navigationController?.popViewController(animated: true)
-        saveChecklist()
     }
     // MARK: - Private methods
-    private func addChecklistItems() {
-        ["Walk the dog", "Brush my teeth", "Learn iOS Development",
-         "Soccer practice", "Eat ice cream"].enumerated().forEach { (i, s) in
-            let checked = (i == 1 || i == 2 || i == 4)
-            checklistItems.append(ChecklistItem(text: s, checked: checked))
-        }
-    }
     private func configureCell(_ cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(LabelTagID) as! UILabel
         let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
         label.text = item.text
         checkmarkLabel.text = (item.checked) ? checkmark : ""
-    }
-    private func saveChecklist() {
-        let encoder = PropertyListEncoder()
-        do {
-            let data = try encoder.encode(checklistItems)
-            try data.write(to: dataFilePath, options: .atomic)
-        } catch {
-            print("Error encoding checklist items")
-        }
-    }
-    private func loadChecklist() {
-        let decoder = PropertyListDecoder()
-        do {
-            let data = try Data(contentsOf: dataFilePath)
-            checklistItems = try decoder.decode([ChecklistItem].self,
-                                                from: data)
-        } catch {
-            print("Error loading checklist")
-        }
     }
 }
