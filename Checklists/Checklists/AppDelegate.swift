@@ -12,9 +12,14 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Properties
     var window: UIWindow?
+    // MARK: - Private properties
+    private let dataModel = DataModel()
     // MARK: - Application delegate methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let navController = window!.rootViewController as! UINavigationController
+        let allListVC = navController.viewControllers.first as! AllListsViewController
+        allListVC.dataModel = dataModel
         return true
     }
     func applicationWillResignActive(_ application: UIApplication) {
@@ -38,9 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     // MARK: - Private methods
     private func saveData() {
-        let navController = window!.rootViewController as! UINavigationController
-        let allListVC = navController.viewControllers.first as! AllListsViewController
-        allListVC.saveChecklists()
+        dataModel.saveChecklists()
     }
 }
 
