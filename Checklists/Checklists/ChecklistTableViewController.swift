@@ -8,11 +8,13 @@
 
 import UIKit
 
-private enum CheckListViewControllerSeugue: String {
+private enum CheckListViewControllerSegue: String {
     case AddItem, EditItem
 }
 
 class ChecklistTableViewController: UITableViewController, ItemDetailViewControllerDelegate {
+    // MARK: - Properties
+    var list: Checklist!
     // MARK: - Private properties
     private let cellIdentifier = "ChecklistItem"
     private let LabelTagID = 1000
@@ -30,10 +32,11 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = list.name
         loadChecklist()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let id = segue.identifier, let segueID = CheckListViewControllerSeugue(rawValue: id) {
+        if let id = segue.identifier, let segueID = CheckListViewControllerSegue(rawValue: id) {
             switch segueID {
             case .AddItem:
                 let dest = segue.destination as! ItemDetailViewController

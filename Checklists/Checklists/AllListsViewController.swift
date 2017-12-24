@@ -23,6 +23,16 @@ class AllListsViewController: UITableViewController {
             lists.append(Checklist(name: $0))
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let id = segue.identifier, let segueID = AllListsViewControllerSegue(rawValue: id) {
+            switch segueID {
+            case .ShowChecklist:
+                let destination = segue.destination as! ChecklistTableViewController
+                let list = sender as! Checklist
+                destination.list = list
+            }
+        }
+    }
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return lists.count
@@ -36,7 +46,8 @@ class AllListsViewController: UITableViewController {
     }
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: AllListsViewControllerSegue.ShowChecklist.rawValue, sender: nil)
+        let list = lists[indexPath.row]
+        performSegue(withIdentifier: AllListsViewControllerSegue.ShowChecklist.rawValue, sender: list)
     }
     // MARK: - Private methods
     private func makeCell(for tableView: UITableView) -> UITableViewCell {
