@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Checklist: NSObject {
+class Checklist: NSObject, Codable {
     // MARK: - Properties
     var name: String
     var count: Int {

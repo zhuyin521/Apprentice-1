@@ -19,7 +19,6 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
     private let cellIdentifier = "ChecklistItem"
     private let LabelTagID = 1000
     private let CheckmarkTagID = 1001
-    private let checkmark = "✅"
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,6 +96,6 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         let label = cell.viewWithTag(LabelTagID) as! UILabel
         let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
         label.text = item.text
-        checkmarkLabel.text = (item.checked) ? checkmark : ""
+        checkmarkLabel.text = (item.checked) ? "✅" : "➖"
     }
 }

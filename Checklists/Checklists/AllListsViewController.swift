@@ -16,12 +16,26 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     // MARK: - Private properties
     private let CellID = "Cell"
     private var lists = [Checklist]()
+    private var documentsDirectory: URL {
+        let paths = FileManager.default.urls(for: .documentDirectory,
+                                             in: .userDomainMask)
+        return paths[0]
+    }
+    private var dataFilePath: URL {
+        return documentsDirectory.appendingPathComponent("Checklists.plist")
+    }
     // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
         ["Birthdays", "Groceries", "Cool Apps", "To Do"].forEach {
             lists.append(Checklist(name: $0))
         }
+        for list in lists {
+            let text = "Item for \(list.name)"
+            let item = ChecklistItem(text: text, checked: false)
+            list.addItem(item)
+        }
+        print("Documents directory: \(documentsDirectory)")
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = AllListsViewControllerSegue(rawValue: id) {
@@ -94,6 +108,24 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             return cell
         } else {
             return UITableViewCell(style: .default, reuseIdentifier: CellID)
+        }
+    }
+    private func saveChecklists() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(lists)
+            try data.write(to: dataFilePath, options: .atomic)
+        } catch {
+            print("Error encoding checklist items")
+        }
+    }
+    private func loadChecklists() {
+        let decoder = PropertyListDecoder()
+        do {
+            let data = try Data(contentsOf: dataFilePath)
+            lists = try decoder.decode([Checklist].self, from: data)
+        } catch {
+            print("Error loading checklist")
         }
     }
 }
