@@ -12,12 +12,25 @@ private enum AllListsViewControllerSegue: String {
     case ShowChecklist, AddChecklist, EditChecklist
 }
 
-class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate {
+class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate, UINavigationControllerDelegate {
     // MARK: - Properties
     var dataModel: DataModel!
     // MARK: - Private properties
     private let CellID = "Cell"
     // MARK: - View controller methods
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.delegate = self
+        // Check if ChecklistIndex is in valid range
+        let index = dataModel.indexOfSelectedChecklist
+        if (0..<dataModel.count).contains(index) {
+            // Go to checklist that user was last viewing, before app
+            //  was terminated
+            let list = dataModel[index]
+            performSegue(withIdentifier: AllListsViewControllerSegue.ShowChecklist.rawValue,
+                         sender: list)
+        }
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, let segueID = AllListsViewControllerSegue(rawValue: id) {
             switch segueID {
@@ -31,8 +44,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             case .EditChecklist:
                 let destination = segue.destination as! ListDetailViewController
                 destination.delegate = self
-                let indexPath = sender as! IndexPath
-                let list = dataModel[indexPath.row]
+                let list = sender as! Checklist
                 destination.checklist = list
             }
         }
@@ -50,7 +62,9 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let list = dataModel[indexPath.row]
+        let index = indexPath.row
+        dataModel.indexOfSelectedChecklist = index
+        let list = dataModel[index]
         performSegue(withIdentifier: AllListsViewControllerSegue.ShowChecklist.rawValue, sender: list)
     }
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -58,7 +72,8 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        performSegue(withIdentifier: AllListsViewControllerSegue.EditChecklist.rawValue, sender: indexPath)
+        let list = dataModel[indexPath.row]
+        performSegue(withIdentifier: AllListsViewControllerSegue.EditChecklist.rawValue, sender: list)
     }
     // MARK: - List detail delegate
     func listItemDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
@@ -79,6 +94,13 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             }
         }
         navigationController?.popViewController(animated: true)
+    }
+    // MARK: - Navigation controller delegate
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        // If viewController is self, back button was pressed
+        if viewController === self {
+            dataModel.indexOfSelectedChecklist = -1
+        }
     }
     // MARK: - Private methods
     private func makeCell(for tableView: UITableView) -> UITableViewCell {

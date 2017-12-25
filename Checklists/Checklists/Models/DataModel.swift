@@ -8,12 +8,24 @@
 
 import Foundation
 
+private enum UserDefaultKeys: String {
+    case ChecklistIndex
+}
+
 // DataModel is the top level model object responsible
 //  for saving and loading Checklist data
 class DataModel {
     // MARK: - Properties
     var count: Int {
         return lists.count
+    }
+    var indexOfSelectedChecklist: Int {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKeys.ChecklistIndex.rawValue) as! Int
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: UserDefaultKeys.ChecklistIndex.rawValue)
+        }
     }
     // MARK: - Private properties
     private var lists = [Checklist]()
@@ -28,6 +40,7 @@ class DataModel {
     // MARK: - Initializers
     init() {
         loadChecklists()
+        registerDefaults()
     }
     // MARK: - Subscript
     subscript(i: Int) -> Checklist {
@@ -52,7 +65,8 @@ class DataModel {
             print("Error encoding checklist items")
         }
     }
-    func loadChecklists() {
+    // MARK: - Private methods
+    private func loadChecklists() {
         let decoder = PropertyListDecoder()
         do {
             let data = try Data(contentsOf: dataFilePath)
@@ -60,5 +74,10 @@ class DataModel {
         } catch {
             print("Error loading checklist")
         }
+    }
+    private func registerDefaults() {
+        let key = UserDefaultKeys.ChecklistIndex.rawValue
+        let defaults = [key: -1]
+        UserDefaults.standard.register(defaults: defaults)
     }
 }
