@@ -9,7 +9,7 @@
 import Foundation
 
 private enum UserDefaultKeys: String {
-    case ChecklistIndex
+    case ChecklistIndex, FirstTime
 }
 
 // DataModel is the top level model object responsible
@@ -41,6 +41,7 @@ class DataModel {
     init() {
         loadChecklists()
         registerDefaults()
+        handleFirstTime()
     }
     // MARK: - Subscript
     subscript(i: Int) -> Checklist {
@@ -76,8 +77,25 @@ class DataModel {
         }
     }
     private func registerDefaults() {
-        let key = UserDefaultKeys.ChecklistIndex.rawValue
-        let defaults = [key: -1]
+        let checklistIndexKey = UserDefaultKeys.ChecklistIndex.rawValue
+        let firstTimeKey = UserDefaultKeys.FirstTime.rawValue
+        let defaults: [String: Any] = [checklistIndexKey: -1, firstTimeKey: true]
         UserDefaults.standard.register(defaults: defaults)
+    }
+    private func handleFirstTime() {
+        let userDefaults = UserDefaults.standard
+        let firstTime = userDefaults.bool(forKey: UserDefaultKeys.FirstTime.rawValue)
+        // If it is the first time, create a new list, so that the app opens
+        //  ready to go with a new list
+        if firstTime {
+            let list = Checklist(name: "List")
+            addList(list)
+            // Set indexOfSelectedList to 0 so that app opens with new list
+            indexOfSelectedChecklist = 0
+            // Set FirstTime key to false, so this code is only run once
+            userDefaults.set(false, forKey: UserDefaultKeys.FirstTime.rawValue)
+            // Synchronize user defaults so that registered key-values are saved
+            userDefaults.synchronize()
+        }
     }
 }
