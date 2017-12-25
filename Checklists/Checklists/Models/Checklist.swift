@@ -14,6 +14,14 @@ class Checklist: NSObject, Codable {
     var count: Int {
         return items.count
     }
+    var uncheckedItemsCount: Int {
+        return items.reduce(0, { (count, item) -> Int in
+            return (!item.checked) ? count + 1 : count
+        })
+    }
+    var isEmpty: Bool {
+        return items.isEmpty
+    }
     // MARK: - Private properties
     private var items: [ChecklistItem]
     // MARK: - Initializers

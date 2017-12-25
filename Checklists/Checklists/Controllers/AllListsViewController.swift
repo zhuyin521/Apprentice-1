@@ -18,6 +18,11 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     // MARK: - Private properties
     private let CellID = "Cell"
     // MARK: - View controller methods
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Will call cellForRow on table view delegate
+        tableView.reloadData()
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.delegate = self
@@ -57,6 +62,15 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         let cell = makeCell(for: tableView)
         let list = dataModel[indexPath.row]
         cell.textLabel?.text = list.name
+        // Calculating and storing the count once is more optimal than doing it twice
+        let count = list.uncheckedItemsCount
+        if list.isEmpty {
+            cell.detailTextLabel?.text = "(No Items)"
+        } else if count == 0 {
+            cell.detailTextLabel?.text = "All Done!"
+        } else {
+            cell.detailTextLabel?.text = "\(count) remaining"
+        }
         cell.accessoryType = .detailDisclosureButton
         return cell
     }
@@ -110,7 +124,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         if let cell = tableView.dequeueReusableCell(withIdentifier: CellID) {
             return cell
         } else {
-            return UITableViewCell(style: .default, reuseIdentifier: CellID)
+            return UITableViewCell(style: .subtitle, reuseIdentifier: CellID)
         }
     }
 }
