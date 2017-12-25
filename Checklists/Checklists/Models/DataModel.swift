@@ -66,12 +66,18 @@ class DataModel {
             print("Error encoding checklist items")
         }
     }
+    func sortChecklists() {
+        lists.sort { (c1, c2) -> Bool in
+            return c1.name.localizedCompare(c2.name) == .orderedAscending
+        }
+    }
     // MARK: - Private methods
     private func loadChecklists() {
         let decoder = PropertyListDecoder()
         do {
             let data = try Data(contentsOf: dataFilePath)
             lists = try decoder.decode([Checklist].self, from: data)
+            sortChecklists()
         } catch {
             print("Error loading checklist")
         }

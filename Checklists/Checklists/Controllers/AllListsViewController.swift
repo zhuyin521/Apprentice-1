@@ -94,19 +94,14 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         navigationController?.popViewController(animated: true)
     }
     func listItemDetailViewController(_ controller: ListDetailViewController, didFinishAdding list: Checklist) {
-        let index = dataModel.count
         dataModel.addList(list)
-        let indexPath = IndexPath(row: index, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
+        dataModel.sortChecklists()
+        tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }
     func listItemDetailViewController(_ controller: ListDetailViewController, didFinishEditing list: Checklist) {
-        if let index = dataModel.index(of: list) {
-            let indexPath = IndexPath(row: index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
-                cell.textLabel?.text = list.name
-            }
-        }
+        dataModel.sortChecklists()
+        tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }
     // MARK: - Navigation controller delegate
