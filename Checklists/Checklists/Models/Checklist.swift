@@ -11,6 +11,7 @@ import Foundation
 class Checklist: NSObject, Codable {
     // MARK: - Properties
     var name: String
+    var iconName: String
     var count: Int {
         return items.count
     }
@@ -25,8 +26,9 @@ class Checklist: NSObject, Codable {
     // MARK: - Private properties
     private var items: [ChecklistItem]
     // MARK: - Initializers
-    init(name: String) {
+    init(name: String, iconName: String = Icon.NoIcon.rawValue) {
         self.name = name
+        self.iconName = iconName
         items = []
         super.init()
     }

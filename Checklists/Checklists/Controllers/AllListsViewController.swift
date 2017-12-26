@@ -71,6 +71,8 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         } else {
             cell.detailTextLabel?.text = "\(count) remaining"
         }
+        let icon = Icon(rawValue: list.iconName)!
+        cell.imageView?.image = icon.image()
         cell.accessoryType = .detailDisclosureButton
         return cell
     }
