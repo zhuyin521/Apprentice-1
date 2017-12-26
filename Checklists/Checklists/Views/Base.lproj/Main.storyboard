@@ -56,9 +56,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the List" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rJT-Nu-MUx">
-                                                    <rect key="frame" x="16" y="6" width="343" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the List" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rJT-Nu-MUx">
+                                                    <rect key="frame" x="8" y="8" width="359" height="28"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
@@ -68,6 +67,12 @@
                                                     </connections>
                                                 </textField>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="rJT-Nu-MUx" firstAttribute="leading" secondItem="aA0-rU-4te" secondAttribute="leading" constant="8" id="IJv-eL-9qn"/>
+                                                <constraint firstItem="rJT-Nu-MUx" firstAttribute="top" secondItem="aA0-rU-4te" secondAttribute="top" constant="8" id="NqN-Eo-PUq"/>
+                                                <constraint firstAttribute="bottom" secondItem="rJT-Nu-MUx" secondAttribute="bottom" constant="8" id="k5r-Qn-SV0"/>
+                                                <constraint firstAttribute="trailing" secondItem="rJT-Nu-MUx" secondAttribute="trailing" constant="8" id="m2K-Fv-KTj"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -195,14 +200,14 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="1001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gki-7p-mhX">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✓" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gki-7p-mhX">
                                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="DTZ-cM-aS9"/>
                                                 <constraint firstAttribute="width" constant="44" id="NOQ-V1-QeP"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="27"/>
+                                            <color key="textColor" red="0.20619053149312752" green="0.35942228679784061" blue="0.86492639780044556" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -256,9 +261,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the Item" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WQK-Zo-mwm">
-                                                    <rect key="frame" x="16" y="6" width="343" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the Item" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WQK-Zo-mwm">
+                                                    <rect key="frame" x="8" y="8" width="359" height="28"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
@@ -268,6 +272,12 @@
                                                     </connections>
                                                 </textField>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="WQK-Zo-mwm" secondAttribute="bottom" constant="8" id="cgJ-V0-AOM"/>
+                                                <constraint firstItem="WQK-Zo-mwm" firstAttribute="leading" secondItem="rcT-ES-MRk" secondAttribute="leading" constant="8" id="lI4-hc-HNL"/>
+                                                <constraint firstAttribute="trailing" secondItem="WQK-Zo-mwm" secondAttribute="trailing" constant="8" id="trq-Uv-joz"/>
+                                                <constraint firstItem="WQK-Zo-mwm" firstAttribute="top" secondItem="rcT-ES-MRk" secondAttribute="top" constant="8" id="y2x-Ni-TaJ"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -322,4 +332,5 @@
         <segue reference="eFO-fH-D7q"/>
         <segue reference="gJJ-b7-3CS"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" red="0.20619053149312752" green="0.35942228679784061" blue="0.86492639780044556" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

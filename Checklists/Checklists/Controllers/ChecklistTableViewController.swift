@@ -96,6 +96,6 @@ class ChecklistTableViewController: UITableViewController, ItemDetailViewControl
         let label = cell.viewWithTag(LabelTagID) as! UILabel
         let checkmarkLabel = cell.viewWithTag(CheckmarkTagID) as! UILabel
         label.text = item.text
-        checkmarkLabel.text = (item.checked) ? "✅" : "➖"
+        checkmarkLabel.text = (item.checked) ? "✓" : "-"
     }
 }

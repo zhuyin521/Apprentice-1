@@ -26,7 +26,7 @@ class Checklist: NSObject, Codable {
     // MARK: - Private properties
     private var items: [ChecklistItem]
     // MARK: - Initializers
-    init(name: String, iconName: String = Icon.NoIcon.rawValue) {
+    init(name: String, iconName: String = Icon.Folder.rawValue) {
         self.name = name
         self.iconName = iconName
         items = []
