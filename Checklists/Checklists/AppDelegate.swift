@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navController = window!.rootViewController as! UINavigationController
         let allListVC = navController.viewControllers.first as! AllListsViewController
         allListVC.dataModel = dataModel
+        // Notification authorization
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            if granted {
+                print("We have permission")
+            } else {
+                print("Permission denied")
+            }
+        }
         return true
     }
     func applicationWillResignActive(_ application: UIApplication) {
