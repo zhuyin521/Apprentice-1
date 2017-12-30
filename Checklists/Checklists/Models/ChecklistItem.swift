@@ -17,10 +17,16 @@ class ChecklistItem: NSObject, Codable {
     // MARK: - Properties
     var text: String
     var checked: Bool
+    var dueDate = Date()
+    var shouldRemind = false
+    // Need to assign itemID in the initializer
+    // If assigned here, it does not save properly
+    let itemID: Int
     // MARK: - Initializers
     init(text: String, checked: Bool) {
         self.text = text
         self.checked = checked
+        itemID = DataModel.nextItemID()
         super.init()
     }
     // MARK: - Methods

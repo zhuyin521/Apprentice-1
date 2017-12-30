@@ -9,12 +9,20 @@
 import Foundation
 
 private enum UserDefaultKeys: String {
-    case ChecklistIndex, FirstTime
+    case ChecklistIndex, FirstTime, ChecklistItemID
 }
 
 // DataModel is the top level model object responsible
 //  for saving and loading Checklist data
 class DataModel {
+    // MARK: - Class methods
+    class func nextItemID() -> Int {
+        let defaults = UserDefaults.standard
+        let itemID = defaults.integer(forKey: UserDefaultKeys.ChecklistItemID.rawValue)
+        defaults.set(itemID+1, forKey: UserDefaultKeys.ChecklistItemID.rawValue)
+        defaults.synchronize()
+        return itemID
+    }
     // MARK: - Properties
     var count: Int {
         return lists.count
