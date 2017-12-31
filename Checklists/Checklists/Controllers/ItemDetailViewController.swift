@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 protocol ItemDetailViewControllerDelegate: class {
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
@@ -86,6 +87,8 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 1 && indexPath.row == 2 {
+            // Date picker has height of 216 points
+            // Return 217 to account for height of date picker and separator
             return 217
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -127,17 +130,29 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
             itemToEdit.text = textField.text!
             itemToEdit.shouldRemind = shouldRemindSwitch.isOn
             itemToEdit.dueDate = dueDate
+            itemToEdit.scheduleNotification()
             delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit)
         } else {
             let item = ChecklistItem(text: textField.text!, checked: false)
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            item.scheduleNotification()
             delegate?.itemDetailViewController(self, addedItem: item)
         }
     }
     @IBAction func dateChanged(_ sender: UIDatePicker) {
         dueDate = sender.date
         updateDueDateLabel()
+    }
+    @IBAction func shouldRemindToggled(_ sender: UISwitch) {
+        textField.resignFirstResponder()
+        if sender.isOn {
+            // Request permission to send local notifications
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .sound], completionHandler: { (_, _) in
+                // do nothing
+            })
+        }
     }
     // MARK: - Private methods
     private func updateDueDateLabel() {

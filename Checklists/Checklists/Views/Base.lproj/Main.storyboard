@@ -300,6 +300,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5Lv-zI-Lt3">
                                                     <rect key="frame" x="310" y="7" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="shouldRemindToggled:" destination="n2Q-11-YZp" eventType="valueChanged" id="EEz-aH-HU2"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
