@@ -12,6 +12,7 @@ import CoreLocation
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
     private let locationManager = CLLocationManager()
+    private var location: CLLocation?
     // MARK: - Outlets
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var latitudeLabel: UILabel!
@@ -19,6 +20,11 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var tagButton: UIButton!
     @IBOutlet weak var locationButton: UIButton!
+    // MARK: - View controller methods
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateLabels()
+    }
     // MARK: - Location manager delegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("didFailWithError: \(error)")
@@ -26,6 +32,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let lastLocation = locations.last!
         print("didUpdateLocations: \(lastLocation)")
+        location = lastLocation
+        updateLabels()
     }
     // MARK: - Actions
     @IBAction func getMyLocation(_ sender: Any) {
@@ -54,6 +62,19 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertVC.addAction(okAction)
         present(alertVC, animated: true, completion: nil)
+    }
+    private func updateLabels() {
+        if let location = location {
+            latitudeLabel.text = String(format: "%.8f", location.coordinate.latitude)
+            longitudeLabel.text = String(format: "%.8f", location.coordinate.longitude)
+            tagButton.isHidden = false
+            messageLabel.text = ""
+        } else {
+            latitudeLabel.text = ""
+            longitudeLabel.text = ""
+            tagButton.isHidden = true
+            messageLabel.text = "Tap 'Get My Location' to Start"
+        }
     }
 }
 
