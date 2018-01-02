@@ -41,9 +41,29 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let lastLocation = locations.last!
         print("didUpdateLocations: \(lastLocation)")
-        location = lastLocation
-        lastLocationError = nil
-        updateLabels()
+        // If the time at which the given location object was too long ago,
+        //  5 seconds in the case, then it is a cached result.
+        if lastLocation.timestamp.timeIntervalSinceNow < -5 {
+            // Ignore the cached locations if they are too old.
+            return
+        }
+        // If the horizontal accuracy is less than zero, than the measurement
+        //  is invalid, and you should ignore it.
+        if lastLocation.horizontalAccuracy < 0 {
+            return
+        }
+        // NOTE: A larger accuracy value means it is LESS accurate
+        if location == nil || location!.horizontalAccuracy > lastLocation.horizontalAccuracy {
+            lastLocationError = nil
+            location = lastLocation
+            // If the new locations accuracy is less than or equal to the desired accuracy,
+            //  then you can stop updating the location.
+            if lastLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
+                print("*** We're done!")
+                stopLocationManager()
+            }
+            updateLabels()
+        }
     }
     // MARK: - Actions
     @IBAction func getMyLocation(_ sender: Any) {
@@ -58,7 +78,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             showLocationServicesDeniedAlert()
             return
         }
-        startLocationManager()
+        if updatingLocation {
+            stopLocationManager()
+        } else {
+            location = nil
+            lastLocationError = nil
+            startLocationManager()
+        }
         updateLabels()
     }
     // MARK: - Methods
@@ -98,6 +124,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             }
             messageLabel.text = statusMessage
         }
+        configureGetButton()
     }
     private func startLocationManager() {
         if CLLocationManager.locationServicesEnabled() {
@@ -112,6 +139,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             locationManager.stopUpdatingLocation()
             locationManager.delegate = nil
             updatingLocation = false
+        }
+    }
+    private func configureGetButton() {
+        if updatingLocation {
+            locationButton.setTitle("Stop", for: .normal)
+        } else {
+            locationButton.setTitle("Get My Location", for: .normal)
         }
     }
 }
