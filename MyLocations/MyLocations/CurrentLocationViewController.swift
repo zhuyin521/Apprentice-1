@@ -88,7 +88,6 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
                     performingReverseGeocoding = false
                 }
             }
-            updateLabels()
             // NOTE: Geocoding sends requests to Apple's servers, should limit calls to the geocoder
             if !performingReverseGeocoding {
                 print("*** Going to geocode")
