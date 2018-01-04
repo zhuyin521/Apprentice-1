@@ -21,6 +21,10 @@ extension CLPlacemark {
     }
 }
 
+enum CurrentLocationSegue: String {
+    case LocationDetail
+}
+
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
     // MARK: - Location properties
@@ -45,6 +49,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLabels()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
     }
     // MARK: - Location manager delegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
