@@ -58,6 +58,16 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         super.viewWillDisappear(animated)
         navigationController?.isNavigationBarHidden = false
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let id = segue.identifier, let segueID = CurrentLocationSegue(rawValue: id) {
+            switch segueID {
+            case .LocationDetail:
+                let locationDetailVC = segue.destination as! LocationDetailViewController
+                locationDetailVC.coordinates = location!.coordinate
+                locationDetailVC.placemark = placemark
+            }
+        }
+    }
     // MARK: - Location manager delegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("didFailWithError: \(error)")
